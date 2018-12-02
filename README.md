@@ -23,4 +23,4 @@ It also accepts a second (boolean) argument (`true` | `false`). Example:
 ```
 
 If `true` is specified => the image data will also be encoded to a Base64 string and decoded back (this is done just as an example on how to that, in case one needs to work with Base64 encoded images).
-Unfortuately this is not supported for *webp* images as the used library only supports decoding *webp* image data from Base64, but it doesn't also support encoding it back to Base64.
+Unfortunately this is not supported for *webp* images as the used library only supports decoding *webp* image data from Base64, but it doesn't also support encoding it back to Base64.
