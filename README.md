@@ -1,10 +1,14 @@
 ## Make image transparent
 
-### Detects the background color of an opaque image by looking at the color of the 1st pixel, then makes transparent all the pixels which have the same color as the detected background one (within some tolerance values - see `colorTolerance` and `colorToleranceUniform` variables in [maing.go](./main.go#L219)). Saves the output as *PNG*.
+Detects the background color of an opaque image by looking at the color of the 1st pixel, then makes transparent all the pixels which have the same color as the detected background one (within some tolerance values - see `colorTolerance` and `colorToleranceUniform` variables in [main.go](./main.go#L219)). Saves the output as *PNG*.
 
-### Supported file types: *jpeg*, *jpg*, *png*, *bmp*, *tiff*, *gif* and *webp*.
+### Supported file types:
 
-### Implemented in [golang](https://golang.org/). To build an executable for your operating system run `go build`.
+*jpeg*, *jpg*, *png*, *bmp*, *tiff*, *gif* and *webp*.
+
+### Build
+
+Implemented in [golang](https://golang.org/). To build an executable for your operating system run `go build`.
 
 ### Example:
 
