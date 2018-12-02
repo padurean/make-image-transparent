@@ -1,6 +1,6 @@
 ## Make image transparent
 
-Detects the background color of an opaque image by looking at the color of the 1st pixel, then makes transparent all the pixels which have the same color as the detected background one (within some tolerance values - see `colorTolerance` and `colorToleranceUniform` variables in [main.go](./main.go#L219)). Saves the output as *PNG*.
+Detects the background color of an opaque image by looking at the color of the 1st pixel, then makes transparent (sets the alpha channel value to 0 for) all the pixels which have the same color as the detected background one (within some tolerance values - see `colorTolerance` and `colorToleranceUniform` variables in [main.go](./main.go#L219)). Saves the output as *PNG*.
 
 ### Supported file types:
 
