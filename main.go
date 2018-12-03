@@ -9,16 +9,21 @@ import (
 	"image/color"
 	"image/draw"
 	"image/gif"
+	_ "image/gif"
 	"image/jpeg"
+	_ "image/jpeg"
 	"image/png"
+	_ "image/png"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
 	"golang.org/x/image/bmp"
+	_ "golang.org/x/image/bmp"
 	"golang.org/x/image/tiff"
-	"golang.org/x/image/webp"
+	_ "golang.org/x/image/tiff"
+	_ "golang.org/x/image/webp"
 )
 
 func logAndExit(msg string, err error) {
@@ -95,24 +100,7 @@ func loadImage(fileName string, imageType ImageType) *image.Image {
 	}
 	defer file.Close()
 
-	var imageData image.Image
-	var err error
-	switch imageType {
-	case ImageTypes.JPEG:
-		imageData, err = jpeg.Decode(file)
-	case ImageTypes.PNG:
-		imageData, _, err = image.Decode(file)
-	case ImageTypes.BMP:
-		imageData, err = bmp.Decode(file)
-	case ImageTypes.TIFF:
-		imageData, err = tiff.Decode(file)
-	case ImageTypes.GIF:
-		imageData, err = gif.Decode(file)
-	case ImageTypes.WEBP:
-		imageData, err = webp.Decode(file)
-	case ImageTypes.UNSUPPORTED:
-		logAndExit("", fmt.Errorf("error when loading image '%s': unsupported type '%s'", fileName, imageType))
-	}
+	imageData, _, err := image.Decode(file)
 
 	if err != nil {
 		logAndExit(fmt.Sprintf("error when decoding image from file '%s'", fileName), err)
@@ -155,55 +143,19 @@ func encodeImageToBase64(img *image.Image, imageType ImageType) string {
 }
 
 func decodeImageFromBase64(data []byte) *image.Image {
-	var imageType ImageType
-	switch {
-	case bytes.Index(data, []byte("data:image/jpeg")) == 0:
-		imageType = ImageTypes.JPEG
-	case bytes.Index(data, []byte("data:image/png")) == 0:
-		imageType = ImageTypes.PNG
-	case bytes.Index(data, []byte("data:image/bmp")) == 0:
-		imageType = ImageTypes.BMP
-	case bytes.Index(data, []byte("data:image/tiff")) == 0:
-		imageType = ImageTypes.TIFF
-	case bytes.Index(data, []byte("data:image/gif")) == 0:
-		imageType = ImageTypes.GIF
-	case bytes.Index(data, []byte("data:image/webp")) == 0:
-		imageType = ImageTypes.WEBP
-	default:
-		imageType = ImageTypes.UNSUPPORTED
-	}
-
 	search := []byte("base64,")
 	if idx := bytes.Index(data, search); idx > -1 {
 		src := data[idx+len(search):]
 		if _, err := base64.StdEncoding.Decode(data, src); err != nil {
-			logAndExit("error when decoding image from base64", err)
+			logAndExit("error when decoding from base64", err)
 		}
 	}
 
-	var imageData image.Image
-	var err error
 	dataBuffer := bytes.NewBuffer(data)
-	switch imageType {
-	case ImageTypes.JPEG:
-		imageData, err = jpeg.Decode(dataBuffer)
-	case ImageTypes.PNG:
-		imageData, _, err = image.Decode(dataBuffer)
-	case ImageTypes.BMP:
-		imageData, err = bmp.Decode(dataBuffer)
-	case ImageTypes.TIFF:
-		imageData, err = tiff.Decode(dataBuffer)
-	case ImageTypes.GIF:
-		imageData, err = gif.Decode(dataBuffer)
-	case ImageTypes.WEBP:
-		imageData, err = webp.Decode(dataBuffer)
-	case ImageTypes.UNSUPPORTED:
-		// atempt to decode anyway
-		imageData, _, err = image.Decode(dataBuffer)
-	}
+	imageData, _, err := image.Decode(dataBuffer)
 
 	if err != nil {
-		logAndExit(fmt.Sprintf("error when decoding image data of type '%s'", imageType), err)
+		logAndExit("error when decoding image data from base64", err)
 	}
 
 	return &imageData
